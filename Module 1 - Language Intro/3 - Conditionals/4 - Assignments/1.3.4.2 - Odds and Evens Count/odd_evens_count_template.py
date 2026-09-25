@@ -25,7 +25,31 @@ upper_bound = 1000
 nums = generate_random_int_list(max_length, upper_bound)
 
 # create two variables to hold the final answers
-num_evens = 0
-num_odds = 0
+#num_evens = 0
+#num_odds = 0
+
+list_evens = []
+list_odds = []
 
 ### YOUR CODE BEGINS HERE ###
+
+length = len(nums)
+print(nums)
+print(length)
+
+for n in range(0, length, 1):
+    if nums[n] % 2 == 0:
+        list_evens.append(nums[n])
+    else:
+        list_odds.append(nums[n])
+
+print(list_evens)
+print(list_odds)
+
+num_evens = len(list_evens)
+num_odds = len(list_odds)
+
+print(num_evens)
+print(num_odds)
+
+

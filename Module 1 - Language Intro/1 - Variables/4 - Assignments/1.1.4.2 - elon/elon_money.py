@@ -14,9 +14,21 @@ Note that Elon's capital will be $33B.
 
 ### all your code below ###
 
+# Equations: 
+# final = principal * ((1 + (rate / 100)) ** n)
 
-# final answer for 10-year
-ten_year_final = None
+# Vars
+Elon_invest = 33000000000
+Rate_10yr = 3.96
+Rate_20yr = 4.32
+Year_10 = 10
+Year_20 = 20
 
-# final answer for 20-year
-twenty_year_final = None
+# Calculations
+
+ten_year_final = Elon_invest * ((1 + (Rate_10yr / 100)) ** Year_10)
+print(ten_year_final)
+
+twenty_year_final = Elon_invest * ((1 + (Rate_20yr / 100)) ** Year_20)
+print(twenty_year_final)
+

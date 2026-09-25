@@ -14,6 +14,19 @@ Note: this problem does not require the "compounding interest" formula from the 
 
 ### Your code here ###
 
-in_state_gift = 0
+import math as m
 
-out_state_gift = 0
+# Formula for calculating interest 
+# final = principal * ((1 + (rate / 100)) ** n)
+
+# Variables
+in_state_cost = 30792
+out_state_cost = 47882
+rate = 5/100 # return rate in percent
+
+# Calculations.
+in_state_gift = in_state_cost / rate
+out_state_gift = out_state_cost / rate
+
+print(in_state_gift)
+print(out_state_gift)

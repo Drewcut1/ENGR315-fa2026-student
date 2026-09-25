@@ -17,12 +17,16 @@ def dot_product(a,b):
     :param b: List B of values
     :return: The dot product as a value between a * b
     """
+    #if len(a) == len(b):
+    #    print("Your vectors are chill, bro")
 
+    dot = 0
     ### YOUR CODE HERE ###
-
+    for i in range(0, int(len(a))):
+        dot += a[i] * b[i]
 
     ### CHANGE THIS RETURN VALUE. IT IS HERE SO THE CODE DOES NOT ERROR
-    return None
+    return dot
 
 """
 Step 1: Generate two "vectors" of equal length but full of random values

@@ -1,0 +1,184 @@
+#################################
+# Title: Toqrue Fluid Sim
+# Author: Drew Cutright
+# Date Created: 9-7-2026
+# Details:
+# The goal of this project is to simulate the fluid in a container bounded by a box with one side hinged and free moving. What happens when
+# the hinged side is released after time t = 0? What is the torque created from the fluid as it moves out of the box?
+#
+#
+#################################
+
+# Possible issues
+# V is defined as the y_g * 
+
+import numpy
+import math as m
+from tabulate import tabulate
+
+### Variables
+rho = 1000 #[kg/m^3]
+m_plate = 10 #[kg/m^3]
+g = 9.81 #[m/s^2]
+y = [4] #[m]
+x = [2] #[m]
+z = [10] #[m]
+V = x[0] * y[0] * z[0]
+Q = [0]
+h_t = [y[-1]]
+y_n = [0]
+y_p = [0]
+theta = [0]
+theta_d = [0]
+alpha = [0]
+alpha_d = [0]
+W = [0]
+t_i = [0.1] # Time step
+time_total = [10] # Simulation time in seconds
+t = [0] # List of time values in the simulation
+w = [0] # angular velocity of door
+q_t = [0] # flow rate
+T = list() # Torque
+T_time = [0] # Instantaneous torque
+headers = ['Time [sec]', 'Theta [rad]', "T [N*m]" ]
+
+####################################################################################################################################################################
+
+### Simulation
+
+# Normalizing
+t_aug = time_total[0]/t_i[0]
+
+n = 0
+
+for n in range(0, int(t_aug), 1):
+
+    # De Normalizing
+    t.append(n * t_i)
+    
+    # hieght
+    y_n.append( y[-1] * (m.cos(theta[-1])))
+    y_g = [y[-1] - y_n[-1]] 
+    
+
+    # Submerged Triangle
+    y_s = h_t[-1]-y_g[-1]
+    hypo_s = y_s / (m.cos(theta[-1]))
+    
+    # 
+    A_s = hypo_s * z[-1]
+    Ix = z[-1]*(hypo_s**2)/12
+    
+    # pressure
+    P = rho*g*h_t[-1]
+
+    # lenght
+    y_pt = 0.5*y_s + Ix / (0.5 * y_s * A_s)
+    y_p = y_pt + (y[0]-h_t[-1])
+    x_p = y_p*m.tan(theta[-1])
+    
+    # area
+    A_g = z[-1] * y_g[-1] 
+
+    # flow rate
+    h_t.append(h_t[-1] - (((t_i[-1]**2)) * (P * (A_s ** 2 )))/((V * rho) * (x[-1] * z[-1])))
+    q_t.append(q_t[-1] + (P * (A_g ** 2) )/V*rho)
+
+    # Volume
+    V_triangle = 0.5 * y_n[-1] * z[-1] * m.sin(theta[-1])*y[-1]
+
+    # force
+    F_x = rho * g * y_pt * (h_t[-1]-y_g[-1]) * z[-1]
+    F_py = rho * g * (h_t[-1] - y_g[-1]) * (z[-1] * y[-1]*m.sin(theta[-1]))
+    F_pw = V_triangle * rho * g
+    F_y = F_py - F_pw
+    F_t = m.sqrt(F_x ** 2 + F_y ** 2)
+    Angle_f = m.atan(F_y/F_x)
+
+    # torque
+    Tx = F_x * y_p
+    Ty = F_y * x_p
+    
+    T.append(Tx + Ty)
+    I = [0.3333333 * m_plate * y[-1] ** 2]
+    T_time.append(T[-1])
+    alpha.append(T[-1] / I[0])
+    theta.append(w[-1] * t_i[-1] + 0.5 * alpha[-1] * (t_i[-1] ** 2))
+    w.append(w[-1] + t_i[0]*alpha[-1])
+    alpha_d.append(m.degrees(theta[-1]))
+
+   
+    #else:
+     #   print(tabulate(table))
+        
+
+### Wrinting out table 
+
+ # table
+table = list(zip(t, theta, T_time))
+#if n == 1:
+print(tabulate(table, headers= headers, tablefmt = "grid"))
+
+
+
+
+
+
+
+
+
+
+
+#####################################
+
+### Equations
+# flow rate
+# h_t = h_0 - (t**2)/(x*z) * (P*A**2)/V*rho
+# q_t = q_0 + (P*A ** 2 )/V*rho
+
+# Submerged Triangle
+# y_s = h_t - y_g
+# h_s = y_s / cos(theta) 
+# A_s = h_s * z
+# Ix = z*(h_s**2)/12
+# y_pt = 0.5*y_s + Ix/(0.5*y_s*A_s)
+
+
+# hieght
+# y_n = y(1-cos(theta))
+# y_g = y - y_n
+# y_p = y_pt + (y-h_t)
+
+# lenght
+# x_p = y_p*tan(theta)
+
+# area
+# A_g = z*y_g 
+
+# Volume
+# V_triangle = 0.5 * y_n * z * sin(theta)*y
+
+# force
+# F_x = rho * g * y_pt * (h_t-y_g) * z
+# F_py = rho * g * (h_t - y_g) * (z * y*sin(theta))
+# F_pw = V_triangle * rho * g
+# F_y = F_py-Fpw
+# F_t = sqrt(F_x ** 2 + F_y ** 2)
+# Angle_f = tan-1(F_y/F_x)
+
+# pressure
+# P = rho*g*h_t
+
+# torque
+# Tx = F_x * y_p
+# Ty = F_y * x_p
+# T = Tx + Ty
+# I = 1/3 * m_plate * y
+# alpha = T/I
+# theta = w(i)*t_i + 0.5*alpha*t_i**2
+
+# UI Controls
+
+
+
+
