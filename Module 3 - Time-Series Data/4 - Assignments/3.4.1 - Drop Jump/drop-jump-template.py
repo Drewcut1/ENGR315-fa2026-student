@@ -1,6 +1,7 @@
 import numpy as np
 from os import path
 import scipy.constants as constants
+import math
 
 
 def main(full_path_to_file):
@@ -33,7 +34,7 @@ def main(full_path_to_file):
     # Step 1: Establish a baseline by examining the force data the after for first ~20 points
 
     # set an amount of time to average and find the baseline
-    baseline_length = 0 ### your code here ###
+    baseline_length = math.average(force_plate) ### your code here ###
 
     # over the baseline, determine the average signal value
     baseline = 0 ### your code here ###
