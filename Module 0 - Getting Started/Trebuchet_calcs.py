@@ -10,12 +10,21 @@ This document serves to calculate dimensions of a trebuchet via optimization met
 
 '''
 
-
-
 # Variables
 
+theta_initial = 0
+angular_velocity_theta = []
+angular_acceleration_theta = []
+
+centripetal_force = []
+tension_force = []
+
+
+phi_initial = 90
+angular_velocity_phi = []
+
 # Forces
-F_centrifical = None
+F_centrifigal = None
 
 # Energies
 E_weight = None

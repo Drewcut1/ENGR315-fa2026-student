@@ -62,7 +62,18 @@ def calculate_stress(force, sample_diameter):
 
     ### YOUR SOLUTION FROM STEP 1 TEMPLATE HERE ###
 
-    return None
+     # calculate the cross-section area (mm^2)
+        ### your code here ###
+    area =  math.pi * (sample_diameter/2)**2
+    
+        # calculate stress (MPa) from load (kN) and cross-sectional area
+        ### your code here ###
+        
+    
+        # delete this line and replace it with your own
+    stress = (force * 1000) / area
+    
+    return stress
 
 
 def calculate_max_strength_strain(strain, stress):
@@ -76,10 +87,10 @@ def calculate_max_strength_strain(strain, stress):
     """
 
     # calculate the maximum stress experienced
-    ultimate_tensile_stress = -1
+    ultimate_tensile_stress = max(stress)
 
     # calculate the maximum strain experienced
-    fracture_strain = -1
+    fracture_strain = max(strain)
 
     return ultimate_tensile_stress, fracture_strain
 
@@ -97,7 +108,7 @@ if __name__ == "__main__":
 
     ### Do not modify below this line ###
 
-    path_to_directory = "../../../data/tensile/"
+    path_to_directory = "data/tensile/"
     path_to_samples = path_to_directory + material_folder + "/"
 
     # manually parse file to get gage diameter and then calculate cross-sectional area
