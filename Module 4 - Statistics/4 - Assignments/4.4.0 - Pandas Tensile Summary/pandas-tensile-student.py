@@ -1,3 +1,4 @@
+
 import numpy as np
 import pandas as pd
 
@@ -9,8 +10,8 @@ sample and these columns:
 
     Sample_Name, Material_Type, Tensile_Strength, Fracture_Strain, Elastic_Modulus, Yield_Strength
 
-Complete the six functions below using Pandas. Each function is graded separately, so you can
-work on them in any order. Your functions will be tested on tensile files with different
+Complete the six functions below using Pandas. Each function is graded separately, so you
+can work on them in any order. Your functions will be tested on tensile files with different
 materials, a different number of samples, and rows in a different order than the course file,
 so do not write code that only works for 1045CR, 2024 and PMMA.
 
@@ -40,7 +41,7 @@ def select_material(_df, _material: str):
     """
 
     # YOUR CODE HERE #
-    _df[_df["Material_Type"] == _material]
+    _df = _df[_df["Material_Type"] == _material]
 
     return _df
 
@@ -56,8 +57,10 @@ def select_strong(_df, _material: str, _min_yield: float):
     """
 
     # YOUR CODE HERE #
-
-    _df[_df[["Material_Type"]] == _material & _df[["Yield_Strength"]] >= _min_yield]
+    _df = _df[
+        (_df["Material_Type"] == _material)
+        & (_df["Yield_Strength"] > _min_yield)
+    ]
 
     return _df
 
@@ -72,10 +75,9 @@ def get_values(_df, _material: str, _column: str):
     """
 
     # YOUR CODE HERE #
+    values = _df.loc[_df["Material_Type"] == _material, _column].to_numpy()
 
-    _df[_df[["Material_Type"] == _material], _column]
-
-    return _df
+    return values
 
 
 def material_statistics(_df, _material: str, _column: str):
@@ -89,9 +91,9 @@ def material_statistics(_df, _material: str, _column: str):
     """
 
     # YOUR CODE HERE #
-    _df[_df[["Material_Type"] == _material], _column]
-    std_mean = (_df.std(), _df.mean())
+    values = _df.loc[_df["Material_Type"] == _material, _column]
 
+    std_mean = (values.mean(), values.std())
 
     return std_mean
 
@@ -112,22 +114,20 @@ def summary_table(_df, _columns: list):
     names = _df["Material_Type"].unique()
     names = names.tolist()
     new_df = {}
-    row_data = {}
 
     for material in names:
 
         temp_new_df = _df[_df["Material_Type"] == material]
-        
-        row_data.append(material)
+        new_df[material] = {}
 
         for column in _columns:
 
-            std = temp_new_df[column].std() 
+            std = temp_new_df[column].std()
             mean = temp_new_df[column].mean()
             tup = (mean, std)
-            new_df[f'{material}'] = {f'{column}': tup}
-            
-        
+
+            new_df[material][column] = tup
+
     return new_df
 
 

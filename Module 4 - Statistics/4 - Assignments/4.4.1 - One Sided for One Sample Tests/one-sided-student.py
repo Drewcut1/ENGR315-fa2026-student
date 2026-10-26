@@ -1,3 +1,4 @@
+
 import numpy as np
 from scipy.stats import ttest_1samp
 
@@ -47,6 +48,16 @@ def one_sided_tests(_files: list, _mean: float, _alpha: float, _less_than: bool)
     reject_null_hypothesis = []
 
     # YOUR CODE HERE #
+    for filename in _files:
+        data = np.loadtxt(filename)
+
+        if _less_than:
+            result = ttest_1samp(data, popmean=_mean, alternative='less')
+        else:
+            result = ttest_1samp(data, popmean=_mean, alternative='greater')
+
+        if result.pvalue < _alpha:
+            reject_null_hypothesis.append(filename)
 
     # return files that were rejected
     return reject_null_hypothesis
