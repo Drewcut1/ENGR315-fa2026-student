@@ -29,6 +29,12 @@ def categorical_test(_observed, _expected, _alpha):
     reject = None
 
     # YOUR CODE HERE #
+    chi_stat, p_value = chisquare(f_obs=_observed, f_exp=_expected)
+
+    if p_value <= _alpha: 
+        reject = True
+    else:
+        reject = False
 
     return chi_stat, p_value, reject
 
@@ -48,6 +54,10 @@ def expected_normal_counts(_bins, _mu, _std, _num_samples):
 
     # YOUR CODE HERE #
 
+    cdf_values = norm.cdf(_bins, loc=_mu, scale=_std)
+    differences = np.diff(cdf_values)
+    expected_counts = differences * _num_samples
+
     return expected_counts
 
 
@@ -59,20 +69,33 @@ def normal_fit_test(_samples, _alpha):
     :return: A tuple (chi2 statistic, p-value, reject) where reject is True if the null hypothesis is rejected
     """
 
-    # Follow these steps (they match the lecture example):
-    # Step 1: fit the samples to a normal distribution with norm.fit()
-    # Step 2: bins are 9 edges from (mean - 2 * std) to (mean + 2 * std) with np.linspace(), then add -np.inf and np.inf
-    # Step 3: bin the samples with np.histogram() to get the observed counts
-    # Step 4: get the expected counts with your expected_normal_counts()
-    # Step 5: run chisquare() with ddof=2, because the mean and standard deviation were estimated from the samples
     chi_stat = None
     p_value = None
     reject = None
 
     # YOUR CODE HERE #
 
-    return chi_stat, p_value, reject
+    mu, std = norm.fit(_samples)
+    minimal = mu - 2*std
+    maximal = mu + 2*std
+    middle = np.linspace(minimal, maximal, 9)
+    bins = np.array([-np.inf])
+    bins = np.append(bins, middle)
+    bins = np.append(bins, np.inf)
+    size = _samples.size
 
+    observed, bin_edges = np.histogram(_samples, bins)
+
+    expectcounts = expected_normal_counts(bins, mu, std, size)
+
+    chi_stat, p_value = chisquare(observed, expectcounts, ddof=2)
+
+    if p_value <= _alpha: 
+        reject = True
+    else:
+        reject = False
+
+    return chi_stat, p_value, reject
 
 if __name__ == "__main__":
     # Use this section to check your work. It is not graded and is not run by Gradescope.
