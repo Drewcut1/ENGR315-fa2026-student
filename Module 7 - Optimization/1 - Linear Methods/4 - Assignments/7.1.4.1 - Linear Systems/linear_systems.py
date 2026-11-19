@@ -22,7 +22,7 @@ def direct_solve(_A, _b):
     :return: length-n numpy array of solution values
     """
     # Hint: use np.linalg.solve() as in lecture.
-    currents = None
+    currents = np.linalg.solve(_A, _b)
 
     # YOUR CODE HERE #
 
@@ -36,8 +36,8 @@ def verify_solution(_A, _b, _x):
              equal to A @ x and matches is a Python bool from np.allclose().
     """
     # Hint: use np.dot() and np.allclose() as in lecture.
-    calculated_b = None
-    matches = None
+    calculated_b = np.dot(_A, _x)
+    matches = np.allclose(calculated_b, _b)
 
     # YOUR CODE HERE #
 
@@ -58,10 +58,31 @@ def jacobi_solve(_A, _b, _tolerance=0.001, _max_iterations=100):
     """
     # Hint: use np.diag(), np.dot(), a for loop, and an if statement.
     x = None
-    iterations = None
-    converged = None
+    iterations = 0
+    converged = False
 
     # YOUR CODE HERE #
+    estimate = np.zeros(len(_b))
+
+    # Use the coefficient matrix as the jacobian
+    jacobian = _A
+    product = np.dot(jacobian, estimate)
+    diagonal = np.diag(_A)
+    double_diag = _A - np.diag(diagonal)
+
+    for i in range(_max_iterations):
+
+        product = np.dot(double_diag, estimate)
+        new_estimate = ((_b - product) / diagonal)
+        max_residual = np.max(np.abs(new_estimate - estimate))
+        estimate = new_estimate
+        iterations = i + 1
+        x = estimate
+
+        if max_residual < _tolerance:
+                
+                converged = True
+                break
 
     return x, iterations, converged
 
@@ -77,6 +98,7 @@ def scipy_iterative_solve(_A, _b, _rtol=1e-5):
     info = None
 
     # YOUR CODE HERE #
+    x, info = cg(_A, _b, x0=None, rtol=_rtol, atol=0.0, maxiter=None, M=None, callback=None)
 
     return x, info
 
